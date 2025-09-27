@@ -23,14 +23,14 @@ public class PR112cat {
 
     // Funció per mostrar el contingut de l'arxiu o el missatge d'error corresponent
     public static void mostrarContingutArxiu(String rutaArxiu) {
-        Path filePath = Paths.get(rutaArxiu);
-
-        if (Files.isDirectory(filePath)) {
-            System.out.println("El path no correspon a un arxiu, sinó a una carpeta.");
-            return;
-        }
-
         try {
+            Path filePath = Paths.get(rutaArxiu);
+
+            if (Files.isDirectory(filePath)) {
+                System.out.println("El path no correspon a un arxiu, sinó a una carpeta.");
+                return;
+            }
+            
             List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
             for (String line : lines) {
                 System.out.println(line);
