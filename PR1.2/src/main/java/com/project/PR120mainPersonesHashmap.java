@@ -1,6 +1,9 @@
 package com.project;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +47,8 @@ public class PR120mainPersonesHashmap {
             oos.writeObject(persones);
             oos.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IOFitxerExcepcio("Error en escriure les persones al fitxer", e);
+
         }
     }
 
@@ -64,7 +68,8 @@ public class PR120mainPersonesHashmap {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IOFitxerExcepcio("Error en llegir les persones del fitxer", e);
+
         }
     }
 }
