@@ -1,10 +1,10 @@
 package com.project;
 
-import com.project.excepcions.IOFitxerExcepcio;
-import com.project.utilitats.UtilsCSV;
-
 import java.util.List;
 import java.util.Scanner;
+
+import com.project.excepcions.IOFitxerExcepcio;
+import com.project.utilitats.UtilsCSV;
 
 public class PR123mainTreballadors {
     private String filePath = System.getProperty("user.dir") + "/data/PR123treballadors.csv";
@@ -59,6 +59,8 @@ public class PR123mainTreballadors {
     // Mètode per mostrar els treballadors llegint el fitxer CSV
     public void mostrarTreballadors() throws IOFitxerExcepcio {
         // *************** CODI PRÀCTICA **********************/
+        List<String> lineas = llegirFitxerCSV();
+        UtilsCSV.llistar(lineas);
     }
 
     // Mètode per modificar un treballador (interactiu)
@@ -82,6 +84,10 @@ public class PR123mainTreballadors {
     // Mètode que modifica treballador (per a tests i usuaris) llegint i escrivint sobre disc
     public void modificarTreballador(String id, String columna, String nouValor) throws IOFitxerExcepcio {
         // *************** CODI PRÀCTICA **********************/
+        List<String> lineas = llegirFitxerCSV();
+        int linia = UtilsCSV.obtenirNumLinia(lineas, "Id", id);
+        UtilsCSV.actualitzarLinia(lineas, linia, columna, nouValor);
+        escriureFitxerCSV(lineas);
     }
 
     // Encapsulació de llegir el fitxer CSV
