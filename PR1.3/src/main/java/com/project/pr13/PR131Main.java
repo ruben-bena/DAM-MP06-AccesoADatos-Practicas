@@ -1,5 +1,6 @@
 package com.project.pr13;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -93,7 +94,28 @@ public class PR131Main {
      */
     private static Document construirDocument() {
         // *************** CODI PRÀCTICA **********************/
-       return null; // Substitueix pel teu
+        try {
+            // Crear documento
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.newDocument();
+
+            // Elemento raiz biblioteca
+            Element elmBiblioteca = doc.createElement("biblioteca");
+            doc.appendChild(elmBiblioteca);
+
+            // Elemento llibre
+            Element elmLlibre = doc.createElement("llibre");
+            Attr attrId = doc.createAttribute("id");
+            attrId.setValue("001");
+            elmBiblioteca.appendChild(attrId);
+
+            // Elementos dentro de llibre
+            Element elmTitol;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
