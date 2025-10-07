@@ -2,10 +2,12 @@ package com.project.pr13;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.project.pr13.format.PersonaFormatter;
 
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -53,8 +55,8 @@ public class PR130Main {
         Document doc = parseXML(inputFile);
         if (doc != null) {
             NodeList persones = doc.getElementsByTagName("persona");
-            // imprimirCapçaleres();
-            // imprimirDadesPersones(persones);
+            imprimirCapçaleres();
+            imprimirDadesPersones(persones);
         }
     }
 
@@ -66,6 +68,42 @@ public class PR130Main {
      */
     public static Document parseXML(File inputFile) {
         // *************** CODI PRÀCTICA **********************/
-        return null; // Substitueix pel teu        
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+            Document doc = dBuilder.parse(inputFile);
+
+            return doc;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }    
+        return null;
+    }
+
+    public void imprimirCapçaleres() {
+        String encabezados = String.format("%-9s%-15s%-6s%-9s", "Nom", "Cognom", "Edat", "Ciutat");
+        System.out.println(encabezados);
+
+        String separadores = "-------- -------------- ----- ---------";
+        System.out.println(separadores);
+    }
+
+    public void imprimirDadesPersones(NodeList persones) {
+        for (int i=0 ; i<persones.getLength() ; i++) {
+            Node persona = persones.item(i);
+            if (persona.getNodeType() == Node.ELEMENT_NODE) {
+                Element elm = (Element) persona;
+
+                String nom = elm.getElementsByTagName("nom").item(0).getTextContent();
+                String cognom = elm.getElementsByTagName("cognom").item(0).getTextContent();
+                String edat = elm.getElementsByTagName("edat").item(0).getTextContent();
+                String ciutat = elm.getElementsByTagName("ciutat").item(0).getTextContent();
+
+                String lineaPersona = String.format("%-9s%-15s%-6s%-9s", nom, cognom, edat, ciutat);
+                System.out.println(lineaPersona);
+            }
+        }
     }
 }
