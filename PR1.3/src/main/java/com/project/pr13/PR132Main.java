@@ -139,7 +139,22 @@ public class PR132Main {
      */
     public List<List<String>> llistarCursos() {
         // *************** CODI PRÀCTICA **********************/
-        return null; // Substitueix pel teu
+        List<List<String>> resultado = new ArrayList<>();
+        Document doc = carregarDocumentXML(xmlFilePath);
+        NodeList cursos = doc.getElementsByTagName("curs");
+        for (int i=0 ; i< cursos.getLength() ; i++) {
+            Node curso = cursos.item(i);
+            if (curso.getNodeType() == Node.ELEMENT_NODE) {
+                Element elm = (Element) curso;
+
+                List<String> listCurso = new ArrayList<>();
+                String id = elm.getAttribute("id");
+                String tutor = elm.getElementsByTagName(id)
+
+                // TODO Usar XPath, no lo que he hecho en PR130...
+            }
+        }
+        
     }
 
     /**
