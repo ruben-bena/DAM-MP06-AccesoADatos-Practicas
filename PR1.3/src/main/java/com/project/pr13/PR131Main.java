@@ -3,6 +3,7 @@ package com.project.pr13;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -110,8 +111,49 @@ public class PR131Main {
             attrId.setValue("001");
             elmBiblioteca.appendChild(attrId);
 
-            // Elementos dentro de llibre
-            Element elmTitol;
+            // Elemento titol
+            Element elmTitol = doc.createElement("titol");
+            Text nodeTextTitol = doc.createTextNode("El viatge dels venturons");
+            elmTitol.appendChild(nodeTextTitol);
+            elmLlibre.appendChild(elmTitol);
+
+            // Elemento autor
+            Element elmAutor = doc.createElement("autor");
+            Text nodeTextAutor = doc.createTextNode("Joan Pla");
+            elmAutor.appendChild(nodeTextAutor);
+            elmLlibre.appendChild(elmAutor);
+
+            // Elemento anyPublicacio
+            Element elmAnyPublicacio = doc.createElement("anyPublicacio");
+            Text nodeTextAnyPublicacio = doc.createTextNode("1998");
+            elmAnyPublicacio.appendChild(nodeTextAnyPublicacio);
+            elmLlibre.appendChild(elmAnyPublicacio);
+
+            // Elemento editorial
+            Element elmEditorial = doc.createElement("editorial");
+            Text nodeTextEditorial = doc.createTextNode("Edicions Mar");
+            elmEditorial.appendChild(nodeTextEditorial);
+            elmLlibre.appendChild(elmEditorial);
+
+            // Elemento genere
+            Element elmGenere = doc.createElement("genere");
+            Text nodeTextGenere = doc.createTextNode("Aventura");
+            elmGenere.appendChild(nodeTextGenere);
+            elmLlibre.appendChild(elmGenere);
+            
+            // Elemento pagines
+            Element elmPagines = doc.createElement("pagines");
+            Text nodeTextPagines = doc.createTextNode("320");
+            elmPagines.appendChild(nodeTextPagines);
+            elmLlibre.appendChild(elmPagines);
+
+            // Elemento disponible
+            Element elmDisponible = doc.createElement("disponible");
+            Text nodeTextDisponible = doc.createTextNode("true");
+            elmDisponible.appendChild(nodeTextDisponible);
+            elmLlibre.appendChild(elmDisponible);
+
+            return doc;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -126,5 +168,16 @@ public class PR131Main {
      */
     private static void guardarDocument(Document doc, File fitxerSortida) {
         // *************** CODI PRÀCTICA **********************/
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(fitxerSortida);
+            transformer.transform(source, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
