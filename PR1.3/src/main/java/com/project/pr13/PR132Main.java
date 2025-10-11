@@ -1,26 +1,29 @@
 package com.project.pr13;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.project.pr13.format.AsciiTablePrinter;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * Classe principal que permet gestionar un fitxer XML de cursos amb opcions per llistar, afegir i eliminar alumnes, 
@@ -139,22 +142,49 @@ public class PR132Main {
      */
     public List<List<String>> llistarCursos() {
         // *************** CODI PRÀCTICA **********************/
-        List<List<String>> resultado = new ArrayList<>();
-        Document doc = carregarDocumentXML(xmlFilePath);
-        NodeList cursos = doc.getElementsByTagName("curs");
-        for (int i=0 ; i< cursos.getLength() ; i++) {
-            Node curso = cursos.item(i);
-            if (curso.getNodeType() == Node.ELEMENT_NODE) {
-                Element elm = (Element) curso;
-
-                List<String> listCurso = new ArrayList<>();
-                String id = elm.getAttribute("id");
-                String tutor = elm.getElementsByTagName(id)
-
-                // TODO Usar XPath, no lo que he hecho en PR130...
-            }
-        }
+        List<List<String>> result = new ArrayList<>();
         
+        try {
+            // Consulta XPath
+            Document doc = carregarDocumentXML(xmlFilePath);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = "/cursos/curs";
+            NodeList nodeListCursos = (NodeList) xPath.compile(expression)
+                .evaluate(doc, XPathConstants.NODESET);
+
+            // Formar result
+            for (int i=0 ; i<nodeListCursos.getLength() ; i++) {
+                Node nodeCurso = nodeListCursos.item(i);
+                if (nodeCurso.getNodeType() == Node.ELEMENT_NODE) {
+                    // Conseguir curso individual
+                    Element elementCurso = (Element) nodeCurso;
+
+                    // Conseguir variables buscadas
+                    String id = elementCurso.getAttribute("id");
+
+                    String tutor = xPath.compile("tutor").evaluate(elementCurso).trim();
+
+                    NodeList nodeListAlumnes = (NodeList) xPath
+                        .compile("alumnes/alumne")
+                        .evaluate(elementCurso, XPathConstants.NODESET);
+                    String numAlumnes = String.valueOf(nodeListAlumnes.getLength());
+                    
+                    // Añadir lista a result
+                    List<String> listCurso = new ArrayList<>();
+                    listCurso.add(id);
+                    listCurso.add(tutor);
+                    listCurso.add(numAlumnes);
+                    result.add(listCurso);
+                }
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -175,7 +205,52 @@ public class PR132Main {
      */
     public List<List<String>> mostrarModuls(String idCurs) {
         // *************** CODI PRÀCTICA **********************/
-        return null; // Substitueix pel teu
+        List<List<String>> result = new ArrayList<>();
+        
+        try {
+            // Consulta XPath
+            Document doc = carregarDocumentXML(xmlFilePath);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = String.format("/cursos/curs[@id='%s']", idCurs);
+            NodeList nodeListCursos = (NodeList) xPath.compile(expression)
+                .evaluate(doc, XPathConstants.NODESET);
+
+            // Recorrer cursos
+            for (int i=0 ; i<nodeListCursos.getLength() ; i++) {
+                Node nodeCurso = nodeListCursos.item(i);
+                if (nodeCurso.getNodeType() == Node.ELEMENT_NODE) {
+                    // Conseguir curso individual
+                    Element elementCurso = (Element) nodeCurso;
+                    NodeList nodeListModuls = (NodeList) xPath.compile("moduls/modul")
+                        .evaluate(elementCurso, XPathConstants.NODESET);
+
+                    // Recorrer módulos
+                    for (int j=0 ; j<nodeListModuls.getLength() ; j++) {
+                        Node nodeModulo = nodeListModuls.item(j);
+                        Element elementModulo = (Element) nodeModulo;
+                        
+                        // Conseguir variables buscadas
+                        String id = elementModulo.getAttribute("id");
+
+                        String titulo = xPath.compile("titol").evaluate(elementModulo).trim();
+                    
+                        // Añadir lista a result
+                        List<String> listModulo = new ArrayList<>();
+                        listModulo.add(id);
+                        listModulo.add(titulo);
+
+                        result.add(listModulo);
+                    }
+                }
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -196,7 +271,38 @@ public class PR132Main {
      */
     public List<String> llistarAlumnes(String idCurs) {
         // *************** CODI PRÀCTICA **********************/
-        return null; // Substitueix pel teu
+        List<String> result = new ArrayList<>();
+        
+        try {
+            // Consulta XPath
+            Document doc = carregarDocumentXML(xmlFilePath);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = String.format("/cursos/curs[@id='%s']/alumnes/alumne", idCurs);
+            NodeList nodeListAlumnos = (NodeList) xPath.compile(expression)
+                .evaluate(doc, XPathConstants.NODESET);
+
+            // Formar result
+            for (int i=0 ; i<nodeListAlumnos.getLength() ; i++) {
+                Node nodeAlumno = nodeListAlumnos.item(i);
+                if (nodeAlumno.getNodeType() == Node.ELEMENT_NODE) {
+                    // Conseguir alumno individual
+                    Element elementAlumno = (Element) nodeAlumno;
+
+                    // Conseguir variables buscadas
+                    String nombre = elementAlumno.getTextContent();
+                    
+                    // Añadir a result
+                    result.add(nombre);
+                }
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -217,6 +323,25 @@ public class PR132Main {
      */
     public void afegirAlumne(String idCurs, String nomAlumne) {
         // *************** CODI PRÀCTICA **********************/
+        try {
+            // XPath
+            Document doc = carregarDocumentXML(xmlFilePath);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = String.format("/cursos/curs[@id='%s']/alumnes", idCurs);
+            Node nodeAlumnos = (Node) xPath.compile(expression)
+                .evaluate(doc, XPathConstants.NODE);
+            
+            // Crear alumno
+            Element alumno = doc.createElement("alumne");
+            alumno.setTextContent(nomAlumne);
+            nodeAlumnos.appendChild(alumno);
+
+            // Guardar documento
+            guardarDocumentXML(doc);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -227,6 +352,31 @@ public class PR132Main {
      */
     public void eliminarAlumne(String idCurs, String nomAlumne) {
         // *************** CODI PRÀCTICA **********************/
+        try {
+            // XPath
+            Document doc = carregarDocumentXML(xmlFilePath);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = String.format("/cursos/curs[@id='%s']/alumnes", idCurs);
+            Node nodeAlumnos = (Node) xPath.compile(expression)
+                .evaluate(doc, XPathConstants.NODE);
+            
+            // Buscar el alumno a eliminar
+            NodeList nodeListAlumnos = nodeAlumnos.getChildNodes();
+            for (int i=0 ; i<nodeListAlumnos.getLength() ; i++) {
+                Node alumno = nodeListAlumnos.item(i);
+                String nombreEncontrado = alumno.getTextContent().trim();
+
+                // Si el nombre coincide, eliminar nodo del alumno
+                if (nombreEncontrado.equals(nomAlumne)) {
+                    nodeAlumnos.removeChild(alumno);
+                    guardarDocumentXML(doc);
+                    return;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
