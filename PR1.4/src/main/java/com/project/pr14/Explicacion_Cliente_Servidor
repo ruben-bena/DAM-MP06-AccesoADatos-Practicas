@@ -1,0 +1,29 @@
+=========================================================
+======================== Cliente ========================
+=========================================================
+
+1) El cliente crea un JsonObject con unos valores arbitrarios y lo convierte a String.
+
+2) Después hace un cliente HTTP, para hacer una petición de tipo POST con el String del Json a la dirección del servidor.
+
+3) Se rjecuta la petició enviándola al servidor.
+
+4) Se recibe la respuesta del servidor, guardada en un BufferedReader, y la va reconstruyendo en un String para acabar imprimiéndola por pantalla.
+
+=========================================================
+======================== Servidor =======================
+=========================================================
+
+1) Se levanta un servidor HTTP usando Undertow escuchando en localhost:8080, y usa un BlockingHandler para permitir operaciones de I/O..
+
+2) Cuando llega una petición HTTP al servidor, se comprueba que solo se procesen peticiones POST y se establece el header para la respuesta.
+
+3) Se lee el cuerpo de la petición, que se convierte a String y se imprime en consola.
+
+4) Se almacena la petición en un archivo .json dentro de data/requests (añadido mío).
+
+6) Se procesa el JSON recibido utilizando Jakarta. Se extraen los valores de la petición y se construye otro JsonObject para la respuesta manipulando esos mismos valores.
+
+7) Se envía la respuesta JSON al cliente.
+
+8) Si hubiera cualquier tipo de error, se envía una respuesta indicándolo.
