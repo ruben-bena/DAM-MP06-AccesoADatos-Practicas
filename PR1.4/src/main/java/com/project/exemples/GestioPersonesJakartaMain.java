@@ -1,7 +1,8 @@
 package com.project.exemples;
 
-import jakarta.json.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -9,6 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.project.objectes.Persona;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonWriter;
 
 /**
  * Classe principal que gestiona la lectura i el processament de fitxers JSON per obtenir dades de persones.
