@@ -1,4 +1,4 @@
-package com.project;
+package java.com.exercici_1_jpa;
 
 import java.io.File;
 import java.util.HashSet;
