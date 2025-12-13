@@ -1,4 +1,4 @@
-package java.com.exercici_0_xml;
+package com.exercici_0_xml;
 
 import java.io.File;
 import java.util.HashSet;
