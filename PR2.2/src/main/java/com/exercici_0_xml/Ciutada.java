@@ -6,7 +6,6 @@ public class Ciutada {
     private String cognom;
     private int edat;
 
-    // Constructor vacío necesario para Hibernate
     public Ciutada() {}
 
     public Ciutada(String nom, String cognom, int edat) {
@@ -15,7 +14,6 @@ public class Ciutada {
         this.edat = edat;
     }
 
-    // Getters y Setters
     public long getCiutadaId() { return ciutadaId; }
     public void setCiutadaId(long ciutadaId) { this.ciutadaId = ciutadaId; }
 

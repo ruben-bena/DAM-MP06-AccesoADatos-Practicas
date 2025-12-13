@@ -112,7 +112,7 @@ public class Manager {
         }
     }
 
-    // DELETE GENÉRICO
+    // DELETE
     public static void delete(Class<?> type, long id) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
